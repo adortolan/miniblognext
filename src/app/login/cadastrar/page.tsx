@@ -1,19 +1,19 @@
 export default function LoginCadastro() {
   return (
     <>
-      <div className="flex bg-gray-800 flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight ">
+          <h2 className="mt-1 text-center text-2xl/9 font-bold tracking-tight ">
             Cadastre-se para postar
           </h2>
         </div>
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action="#" method="POST" className="space-y-6">
+        <div className="mt-3 sm:mx-auto sm:w-full sm:max-w-sm">
+          <form action="#" method="POST" className="space-y-1">
             <div>
               <label htmlFor="name" className="block text-sm/6 font-medium">
                 Nome
               </label>
-              <div className="mt-2">
+              <div className="mt-0.5">
                 <input
                   type="text"
                   id="name"
@@ -30,7 +30,7 @@ export default function LoginCadastro() {
               <label htmlFor="email" className="block text-sm/6 font-medium">
                 Email
               </label>
-              <div className="mt-2">
+              <div className="mt-0.5">
                 <input
                   type="email"
                   id="email"
@@ -46,12 +46,12 @@ export default function LoginCadastro() {
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="password"
-                  className="block text-sm/6 font-medium text-white"
+                  className="block text-sm/6 font-medium "
                 >
                   Password
                 </label>
               </div>
-              <div className="mt-2">
+              <div className="mt-0.5">
                 <input
                   type="password"
                   id="passoword"
@@ -67,12 +67,12 @@ export default function LoginCadastro() {
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="passwordConfirm"
-                  className="block text-sm/6 font-medium text-white"
+                  className="block text-sm/6 font-medium "
                 >
                   Confirme a senha
                 </label>
               </div>
-              <div className="mt-2">
+              <div className="mt-0.5">
                 <input
                   type="password"
                   id="passwordConfirm"

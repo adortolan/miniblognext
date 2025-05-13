@@ -1,4 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+
 import type { Navigation } from "@/interfaces/navigation";
 import type { User, UserNavigation } from "@/interfaces/user";
 import {
@@ -13,15 +14,17 @@ import {
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 export function Header() {
   const user: User = {
     name: "Adilson Ortolan",
     email: "adortolan@gmail.com",
-    imageUrl: "/user1.png",
+    //imageUrl: "/user1.png",
+    imageUrl: "/userProfile.jpg",
   };
 
-  const navigation: Navigation[] = [
+  const [navigation, setNavigation] = useState<Navigation[]>([
     {
       name: "Blog",
       href: "/",
@@ -32,21 +35,12 @@ export function Header() {
       href: "/about",
       current: false,
     },
-    {
-      name: "Login",
-      href: "/login",
-      current: false,
-    },
-  ];
+  ]);
 
   const userNavigation: UserNavigation[] = [
     {
-      name: "Seu Profile",
-      href: "#",
-    },
-    {
-      name: "Configurações",
-      href: "#",
+      name: "Login",
+      href: "/login",
     },
     {
       name: "Logout",
@@ -54,9 +48,19 @@ export function Header() {
     },
   ];
 
-  function classNames(...classes: any) {
+  function classNames(...classes: (string | undefined | null | false)[]) {
     return classes.filter(Boolean).join(" ");
   }
+
+  const handleNavigationClick = (name: string) => {
+    setNavigation((prevNavigation) =>
+      prevNavigation.map((item) =>
+        item.name === name
+          ? { ...item, current: true }
+          : { ...item, current: false }
+      )
+    );
+  };
 
   return (
     <>
@@ -79,6 +83,7 @@ export function Header() {
                             : "text-gray-300 hover:bg-gray-700 hover:text-white",
                           "rounded-md px-3 py-2 text-sm font-medium"
                         )}
+                        onClick={() => handleNavigationClick(item.name)}
                       >
                         {item.name}
                       </Link>

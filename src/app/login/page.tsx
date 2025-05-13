@@ -3,14 +3,14 @@ import Link from "next/link";
 export default function Login() {
   return (
     <>
-      <div className="flex bg-gray-800 flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight ">
             Entre com a sua conta
           </h2>
         </div>
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action="#" method="POST" className="space-y-6">
+        <div className="mt-3 sm:mx-auto sm:w-full sm:max-w-sm">
+          <form action="#" method="POST" className="space-y-3">
             <div>
               <label htmlFor="email" className="block text-sm/6 font-medium">
                 Email
@@ -31,18 +31,10 @@ export default function Login() {
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="password"
-                  className="block text-sm/6 font-medium text-white"
+                  className="block text-sm/6 font-medium"
                 >
                   Password
                 </label>
-                <div className="text-sm">
-                  <Link
-                    href="#"
-                    className="font-semibold hover:text-indigo-500"
-                  >
-                    Esqueceu a senha?
-                  </Link>
-                </div>
               </div>
               <div className="mt-2">
                 <input
@@ -61,6 +53,11 @@ export default function Login() {
             shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
             >
               Entrar
+            </div>
+            <div className="flex items-center justify-between hover:underline">
+              <Link href={"/login/cadastrar"}>
+                Você não tem uma conta? Cadastre-se
+              </Link>
             </div>
           </form>
         </div>
