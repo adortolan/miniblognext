@@ -27,7 +27,7 @@ describe("Page", () => {
   it("validates password input", () => {
     render(<Page />);
 
-    const passwordInput = screen.getByLabelText(/Password/i);
+    const passwordInput = screen.getByLabelText("Senha");
     expect(passwordInput).toBeInTheDocument();
     expect(passwordInput).toHaveAttribute("type", "password");
   });
@@ -54,7 +54,7 @@ describe("Page", () => {
   it("validates password is required", () => {
     render(<Page />);
 
-    const passwordInput = screen.getByLabelText(/Password/i);
+    const passwordInput = screen.getByLabelText("Senha");
     expect(passwordInput).toBeRequired();
   });
 });

@@ -1,4 +1,21 @@
+"use client";
+import { createLoginUser } from "@/app/lib/actions";
+import { useActionState } from "react";
+
+const initialState = {
+  message: "",
+};
+
 export default function LoginCadastro() {
+  const [state, formAction, pending] = useActionState(
+    createLoginUser,
+    initialState
+  );
+
+  if (state && state.message === "Usuário criado com sucesso") {
+    window.location.href = "/login";
+  }
+
   return (
     <>
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
@@ -8,7 +25,7 @@ export default function LoginCadastro() {
           </h2>
         </div>
         <div className="mt-3 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action="#" method="POST" className="space-y-1">
+          <form action={formAction} className="space-y-1">
             <div>
               <label htmlFor="name" className="block text-sm/6 font-medium">
                 Nome
@@ -48,7 +65,7 @@ export default function LoginCadastro() {
                   htmlFor="Password"
                   className="block text-sm/6 font-medium "
                 >
-                  Password
+                  Senha
                 </label>
               </div>
               <div className="mt-0.5">
@@ -83,12 +100,16 @@ export default function LoginCadastro() {
                 />
               </div>
             </div>
+            {state && (
+              <div className="mt-2 text-sm/6 text-red-500">{state.message}</div>
+            )}
 
             <input
               type="submit"
               value="Cadastrar"
               className="w-full cursor-pointer rounded-md bg-gray-600 px-3 py-1.5 text-sm/6 font-semibold
                 shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+              disabled={pending}
             />
           </form>
         </div>
