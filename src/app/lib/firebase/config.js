@@ -3,7 +3,8 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDz1iutOPlZRvoa-HMx1lnFwEGe_hlmtPI",
+  //apiKey: "AIzaSyDz1iutOPlZRvoa-HMx1lnFwEGe_hlmtPI",
+  apiKey: process.env.apiKey,
   authDomain: "miniblognext.firebaseapp.com",
   projectId: "miniblognext",
   storageBucket: "miniblognext.firebasestorage.app",
