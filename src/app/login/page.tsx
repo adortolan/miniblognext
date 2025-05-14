@@ -33,7 +33,7 @@ export default function Login() {
                   htmlFor="Password"
                   className="block text-sm/6 font-medium"
                 >
-                  Password
+                  Senha
                 </label>
               </div>
               <div className="mt-2">
