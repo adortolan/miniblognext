@@ -20,7 +20,7 @@ export default function LoginCadastro() {
                   name="name"
                   required
                   autoComplete="name"
-                  className="block w-full rounded-md bg-gray-800 px-3 py-1.5 text-base outline-1 outline-offset-1
+                  className="block w-full rounded-md bg-gray-800 px-3 py-1.5 text-base outline-1 outline-offset-1 text-white
                   placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-400 sm:text-sm/6"
                 />
               </div>
@@ -37,7 +37,7 @@ export default function LoginCadastro() {
                   name="email"
                   required
                   autoComplete="email"
-                  className="block w-full rounded-md bg-gray-800 px-3 py-1.5 text-base outline-1 outline-offset-1
+                  className="block w-full rounded-md bg-gray-800 px-3 py-1.5 text-base outline-1 outline-offset-1 text-white
                   placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-400 sm:text-sm/6"
                 />
               </div>
@@ -45,7 +45,7 @@ export default function LoginCadastro() {
             <div>
               <div className="flex items-center justify-between">
                 <label
-                  htmlFor="password"
+                  htmlFor="Password"
                   className="block text-sm/6 font-medium "
                 >
                   Password
@@ -54,11 +54,11 @@ export default function LoginCadastro() {
               <div className="mt-0.5">
                 <input
                   type="password"
-                  id="passoword"
+                  id="Password"
                   name="password"
                   required
                   autoComplete="current-password"
-                  className="block w-full rounded-md  bg-gray-800 px-3 py-1.5 text-base outline-1 outline-offset-1 outline-gray-300
+                  className="block w-full rounded-md  bg-gray-800 px-3 py-1.5 text-base outline-1 outline-offset-1 outline-gray-300 text-white
                   placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-400 sm:text-sm/6 "
                 />
               </div>
@@ -78,17 +78,18 @@ export default function LoginCadastro() {
                   id="passwordConfirm"
                   name="passwordConfirm"
                   required
-                  className="block w-full rounded-md  bg-gray-800 px-3 py-1.5 text-base outline-1 outline-offset-1 outline-gray-300
+                  className="block w-full rounded-md  bg-gray-800 px-3 py-1.5 text-base outline-1 outline-offset-1 outline-gray-300 text-white
                   placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-400 sm:text-sm/6 "
                 />
               </div>
             </div>
-            <div
-              className="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm/6 font-semibold
-            shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
-            >
-              Cadastrar
-            </div>
+
+            <input
+              type="submit"
+              value="Cadastrar"
+              className="w-full cursor-pointer rounded-md bg-gray-600 px-3 py-1.5 text-sm/6 font-semibold
+                shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+            />
           </form>
         </div>
       </div>
