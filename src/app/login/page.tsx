@@ -1,6 +1,17 @@
+"use client";
 import Link from "next/link";
+import { loginUser } from "../lib/actions";
+import { useActionState } from "react";
 
 export default function Login() {
+  const [state, formAction, pending] = useActionState(loginUser, {
+    message: "",
+  });
+
+  if (state && state.message === "Login realizado com sucesso") {
+    window.location.href = "/";
+  }
+
   return (
     <>
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
@@ -10,7 +21,7 @@ export default function Login() {
           </h2>
         </div>
         <div className="mt-3 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action="#" method="POST" className="space-y-3">
+          <form action={formAction} className="space-y-3">
             <div>
               <label htmlFor="email" className="block text-sm/6 font-medium">
                 Email
@@ -48,11 +59,18 @@ export default function Login() {
                 />
               </div>
             </div>
+            {state?.message && (
+              <div className="mt-2 text-center text-sm text-red-500">
+                {state.message}
+              </div>
+            )}
+
             <input
               type="submit"
               value="Entrar"
               className="w-full cursor-pointer rounded-md bg-gray-600 px-3 py-1.5 text-sm/6 font-semibold
                 shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+              disabled={pending}
             />
             <div className="flex items-center justify-between hover:underline">
               <Link href={"/login/cadastrar"}>
