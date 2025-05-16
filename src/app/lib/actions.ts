@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { auth } from "@/app/lib/firebase/config";
+import { cookies } from "next/headers";
 
 export async function createLoginUser(prevState: any, formData: FormData) {
   const email = formData.get("email") as string;
@@ -29,5 +34,55 @@ export async function createLoginUser(prevState: any, formData: FormData) {
       message: `Erro ao criar usuário: ${error.message}`,
     };
   }
+
   return { message: "Usuário criado com sucesso" };
+}
+
+export async function loginUser(
+  prevState: any,
+  formData: FormData
+): Promise<{ message: string }> {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const user = userCredential.user;
+    const token = await user.getIdToken();
+
+    const cookieStore = cookies();
+    (await cookieStore).set("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7, // 7 dias
+    });
+
+    console.log("User logged in token:", token);
+  } catch (error: any) {
+    return {
+      message: `Erro ao fazer login: ${error.message}`,
+    };
+  }
+  return { message: "Login realizado com sucesso" };
+}
+
+export async function logoutUser() {
+  try {
+    await auth.signOut();
+    const cookieStore = cookies();
+    (await cookieStore).delete("token");
+
+    console.log("User logged out");
+  } catch (error: any) {
+    return {
+      message: `Erro ao fazer logout: ${error.message}`,
+    };
+  }
+  return { message: "Logout realizado com sucesso" };
 }
