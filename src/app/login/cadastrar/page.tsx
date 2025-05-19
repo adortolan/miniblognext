@@ -65,7 +65,10 @@ export default function LoginCadastro() {
                   htmlFor="Password"
                   className="block text-sm/6 font-medium "
                 >
-                  Senha
+                  Senha{" "}
+                  <span className="text-xs text-gray-400">
+                    (mínimo de 6 caracteres)
+                  </span>
                 </label>
               </div>
               <div className="mt-0.5">
@@ -74,6 +77,7 @@ export default function LoginCadastro() {
                   id="Password"
                   name="password"
                   required
+                  minLength={6}
                   autoComplete="current-password"
                   className="block w-full rounded-md  bg-gray-800 px-3 py-1.5 text-base outline-1 outline-offset-1 outline-gray-300 text-white
                   placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-400 sm:text-sm/6 "
