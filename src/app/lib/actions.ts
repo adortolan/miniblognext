@@ -98,7 +98,8 @@ export async function createPost(
   const image = formData.get("image") as File;
   const tags = formData.get("tags") as string;
 
-  const token = cookies().get("token")?.value;
+  const cookieStore = cookies();
+  const token = (await cookieStore).get("token")?.value;
 
   if (!token) {
     return { message: "Usuário não está logado" };
