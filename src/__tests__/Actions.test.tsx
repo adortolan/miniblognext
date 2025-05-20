@@ -1,10 +1,29 @@
-import { createLoginUser, loginUser, logoutUser } from "../app/lib/actions";
+import {
+  createLoginUser,
+  createPost,
+  loginUser,
+  logoutUser,
+} from "../app/lib/actions";
 import {
   createUserWithEmailAndPassword,
   updateProfile,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { cookies } from "next/headers";
+import { addDoc } from "firebase/firestore";
+import { verifyIdToken } from "../app/lib/firebase/admin";
+
+// Mock do verifyIdToken
+jest.mock("../app/lib/firebase/admin", () => ({
+  verifyIdToken: jest.fn(),
+}));
+
+// Mock do addDoc do Firestore
+jest.mock("firebase/firestore", () => ({
+  addDoc: jest.fn(),
+  collection: jest.fn(),
+  Timestamp: { now: jest.fn(() => "mocked-timestamp") },
+}));
 
 jest.mock("next/headers", () => ({
   cookies: jest.fn(),
@@ -123,6 +142,56 @@ describe("Actions", () => {
 
     expect(result).toEqual({
       message: "Login realizado com sucesso",
+    });
+    expect(result).toHaveProperty("message");
+  });
+
+  it("Deve criar um post", async () => {
+    // Mock do retorno do addDoc
+    (addDoc as jest.Mock).mockResolvedValue({ id: "123456" });
+
+    (cookies as jest.Mock).mockReturnValue({
+      get: jest.fn().mockReturnValue({ value: "token" }),
+    });
+
+    (verifyIdToken as jest.Mock).mockResolvedValue({
+      uid: "123456",
+    });
+
+    const formData = new FormData();
+    formData.append("titulo", "Teste");
+    formData.append("conteudo", "Teste");
+    formData.append("image", "Teste");
+    formData.append("tags", "Teste");
+
+    const result = await createPost({}, formData);
+    expect(result).toEqual({
+      message: "Post criado com sucesso",
+    });
+    expect(result).toHaveProperty("message");
+  });
+
+  it("Deve retornar mesagem de Usuário não está logado", async () => {
+    // Mock do retorno do addDoc
+    (addDoc as jest.Mock).mockResolvedValue({ id: "123456" });
+
+    (cookies as jest.Mock).mockReturnValue({
+      get: jest.fn().mockReturnValue({ value: "" }),
+    });
+
+    (verifyIdToken as jest.Mock).mockResolvedValue({
+      uid: "123456",
+    });
+
+    const formData = new FormData();
+    formData.append("titulo", "Teste");
+    formData.append("conteudo", "Teste");
+    formData.append("image", "Teste");
+    formData.append("tags", "Teste");
+
+    const result = await createPost({}, formData);
+    expect(result).toEqual({
+      message: "Usuário não está logado",
     });
     expect(result).toHaveProperty("message");
   });

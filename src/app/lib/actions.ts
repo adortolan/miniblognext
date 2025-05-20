@@ -5,8 +5,10 @@ import {
   updateProfile,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { auth } from "@/app/lib/firebase/config";
+import { auth, db } from "@/app/lib/firebase/config";
 import { cookies } from "next/headers";
+import { collection, addDoc, Timestamp } from "firebase/firestore";
+import { verifyIdToken } from "@/app/lib/firebase/admin";
 
 export async function createLoginUser(prevState: any, formData: FormData) {
   const email = formData.get("email") as string;
@@ -85,4 +87,42 @@ export async function logoutUser() {
     };
   }
   return { message: "Logout realizado com sucesso" };
+}
+
+export async function createPost(
+  prevState: any,
+  formData: FormData
+): Promise<{ message: string }> {
+  const titulo = formData.get("titulo") as string;
+  const conteudo = formData.get("conteudo") as string;
+  const image = formData.get("image") as File;
+  const tags = formData.get("tags") as string;
+
+  const token = cookies().get("token")?.value;
+
+  if (!token) {
+    return { message: "Usuário não está logado" };
+  }
+  const decodedToken = await verifyIdToken(token);
+
+  // criar um insert de post no banco de dados firebase
+  const postRef = collection(db, "posts");
+  const postData = {
+    userId: decodedToken.uid,
+    titulo,
+    conteudo,
+    image,
+    tags,
+    createdAt: Timestamp.now(),
+  };
+
+  try {
+    await addDoc(postRef, postData);
+    console.log("Post created:", postData);
+  } catch (error: any) {
+    return {
+      message: `Erro ao criar post: ${error.message}`,
+    };
+  }
+  return { message: "Post criado com sucesso" };
 }

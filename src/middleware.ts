@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-const protectedRoutes = ["/", "/logout"];
+const protectedRoutes = ["/", "/logout", "/createpost"];
 const publicRoutes = ["/login"];
 
 export default async function middleware(req: NextRequest) {

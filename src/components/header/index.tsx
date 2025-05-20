@@ -31,6 +31,11 @@ export function Header() {
       current: true,
     },
     {
+      name: "Criar Post",
+      href: "/createpost",
+      current: false,
+    },
+    {
       name: "Sobre",
       href: "/about",
       current: false,
