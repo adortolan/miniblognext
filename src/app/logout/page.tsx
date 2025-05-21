@@ -27,7 +27,8 @@ export default function Logout() {
             <div className="flex justify-between">
               <button
                 type="submit"
-                className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:text-sm/6"
+                className="w-full cursor-pointer rounded-md bg-red-500 px-3 py-1.5 text-sm/6 font-semibold
+                shadow-xs hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-400"
               >
                 Sair
               </button>
@@ -38,7 +39,8 @@ export default function Logout() {
           <button
             type="button"
             onClick={() => router.push("/")}
-            className="inline-flex w-full justify-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 sm:text-sm/6"
+            className="w-full cursor-pointer rounded-md bg-gray-600 px-3 py-1.5 text-sm/6 font-semibold
+                shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
           >
             Cancelar
           </button>

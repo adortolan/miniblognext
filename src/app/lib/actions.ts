@@ -9,6 +9,9 @@ import { auth, db } from "@/app/lib/firebase/config";
 import { cookies } from "next/headers";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { verifyIdToken } from "@/app/lib/firebase/admin";
+import { getDocs, doc, setDoc } from "firebase/firestore";
+import { getDoc } from "firebase/firestore";
+import { deleteDoc } from "firebase/firestore";
 
 export async function createLoginUser(prevState: any, formData: FormData) {
   const email = formData.get("email") as string;
@@ -98,13 +101,43 @@ export async function createPost(
   const image = formData.get("image") as File;
   const tags = formData.get("tags") as string;
 
+  try {
+    new URL(image as string);
+  } catch (error: any) {
+    return {
+      message: "URL da imagem inválida",
+    };
+  }
+
   const cookieStore = cookies();
   const token = (await cookieStore).get("token")?.value;
 
   if (!token) {
     return { message: "Usuário não está logado" };
   }
-  const decodedToken = await verifyIdToken(token);
+
+  let decodedToken: any;
+
+  //criar uma promisse para verificar o token
+  // e retornar o uid do usuário
+  // e verificar se o token é válido
+
+  try {
+    decodedToken = await verifyIdToken(token);
+  } catch (error: any) {
+    const cookieStore = cookies();
+    (await cookieStore).delete("token");
+    return {
+      message: `Erro ao verificar token: ${error.message}`,
+    };
+  }
+
+  const tagsArray = tags.split(",").map((tag) => tag.trim().toLowerCase());
+  if (tagsArray.length > 5) {
+    return {
+      message: "Máximo de 5 tags",
+    };
+  }
 
   // criar um insert de post no banco de dados firebase
   const postRef = collection(db, "posts");
@@ -113,7 +146,7 @@ export async function createPost(
     titulo,
     conteudo,
     image,
-    tags,
+    tagsArray,
     createdAt: Timestamp.now(),
   };
 
@@ -126,4 +159,101 @@ export async function createPost(
     };
   }
   return { message: "Post criado com sucesso" };
+}
+
+export async function listPosts() {
+  const postsRef = collection(db, "posts");
+  const postsSnapshot = await getDocs(postsRef);
+  const postsList = postsSnapshot.docs.map((doc) => doc.data());
+  return postsList;
+}
+export async function deletePost(postId: string) {
+  const postRef = doc(db, "posts", postId);
+  try {
+    await deleteDoc(postRef);
+    console.log("Post deleted:", postId);
+  } catch (error: any) {
+    return {
+      message: `Erro ao deletar post: ${error.message}`,
+    };
+  }
+  return { message: "Post deletado com sucesso" };
+}
+export async function updatePost(
+  postId: string,
+  formData: FormData
+): Promise<{ message: string }> {
+  const titulo = formData.get("titulo") as string;
+  const conteudo = formData.get("conteudo") as string;
+  const image = formData.get("image") as File;
+  const tags = formData.get("tags") as string;
+
+  try {
+    new URL(image as string);
+  } catch (error: any) {
+    return {
+      message: "URL da imagem inválida",
+    };
+  }
+
+  const cookieStore = cookies();
+  const token = (await cookieStore).get("token")?.value;
+
+  if (!token) {
+    return { message: "Usuário não está logado" };
+  }
+
+  let decodedToken: any;
+
+  //criar uma promisse para verificar o token
+  // e retornar o uid do usuário
+  // e verificar se o token é válido
+
+  try {
+    decodedToken = await verifyIdToken(token);
+  } catch (error: any) {
+    const cookieStore = cookies();
+    (await cookieStore).delete("token");
+    return {
+      message: `Erro ao verificar token: ${error.message}`,
+    };
+  }
+
+  const tagsArray = tags.split(",").map((tag) => tag.trim().toLowerCase());
+  if (tagsArray.length > 5) {
+    return {
+      message: "Máximo de 5 tags",
+    };
+  }
+
+  // criar um insert de post no banco de dados firebase
+  const postRef = doc(db, "posts", postId);
+  const postData = {
+    userId: decodedToken.uid,
+    titulo,
+    conteudo,
+    image,
+    tagsArray,
+    createdAt: Timestamp.now(),
+  };
+
+  try {
+    await setDoc(postRef, postData);
+    console.log("Post updated:", postData);
+  } catch (error: any) {
+    return {
+      message: `Erro ao atualizar post: ${error.message}`,
+    };
+  }
+  return { message: "Post atualizado com sucesso" };
+}
+
+export async function getPost(postId: string) {
+  const postRef = doc(db, "posts", postId);
+  const postSnapshot = await getDoc(postRef);
+  if (postSnapshot.exists()) {
+    return postSnapshot.data();
+  } else {
+    return null;
+  }
 }
