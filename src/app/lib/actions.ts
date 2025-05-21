@@ -98,7 +98,7 @@ export async function createPost(
 ): Promise<{ message: string }> {
   const titulo = formData.get("titulo") as string;
   const conteudo = formData.get("conteudo") as string;
-  const image = formData.get("image") as File;
+  const image = formData.get("image") as string;
   const tags = formData.get("tags") as string;
 
   try {
