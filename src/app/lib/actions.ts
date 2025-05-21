@@ -192,7 +192,7 @@ export async function updatePost(
     new URL(image as string);
   } catch (error: any) {
     return {
-      message: "URL da imagem inválida",
+      message: `URL da imagem inválida: ${error.message}`,
     };
   }
 
@@ -204,10 +204,6 @@ export async function updatePost(
   }
 
   let decodedToken: any;
-
-  //criar uma promisse para verificar o token
-  // e retornar o uid do usuário
-  // e verificar se o token é válido
 
   try {
     decodedToken = await verifyIdToken(token);
