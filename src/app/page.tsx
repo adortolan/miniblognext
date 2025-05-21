@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Image from "next/image";
 import { listPosts } from "./lib/actions";
 
@@ -22,7 +23,7 @@ export default async function Home() {
             <h2 className="text-xl font-semibold">{post.titulo}</h2>
             <p className="mt-2 text-gray-600">{post.conteudo}</p>
             <div className="mt-4 flex flex-wrap gap-2">
-              {post.tagsArray.map((tag) => (
+              {post.tagsArray.map((tag: any) => (
                 <span
                   key={tag}
                   className="rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-800"

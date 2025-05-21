@@ -102,7 +102,7 @@ export async function createPost(
   const tags = formData.get("tags") as string;
 
   try {
-    new URL(image as string);
+    new URL(image);
   } catch (error: any) {
     return {
       message: `URL da imagem inválida: ${error.message}`,
@@ -185,11 +185,11 @@ export async function updatePost(
 ): Promise<{ message: string }> {
   const titulo = formData.get("titulo") as string;
   const conteudo = formData.get("conteudo") as string;
-  const image = formData.get("image") as File;
+  const image = formData.get("image") as string;
   const tags = formData.get("tags") as string;
 
   try {
-    new URL(image as string);
+    new URL(image);
   } catch (error: any) {
     return {
       message: `URL da imagem inválida: ${error.message}`,
