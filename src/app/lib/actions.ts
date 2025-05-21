@@ -105,7 +105,7 @@ export async function createPost(
     new URL(image as string);
   } catch (error: any) {
     return {
-      message: "URL da imagem inválida",
+      message: `URL da imagem inválida: ${error.message}`,
     };
   }
 
