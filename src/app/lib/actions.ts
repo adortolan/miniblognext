@@ -14,7 +14,7 @@ import { verifyIdToken } from "@/app/lib/firebase/admin";
 import { getDocs, doc, setDoc } from "firebase/firestore";
 import { getDoc } from "firebase/firestore";
 import { deleteDoc } from "firebase/firestore";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 
 export async function createLoginUser(prevState: any, formData: FormData) {
   const email = formData.get("email") as string;
