@@ -14,23 +14,96 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# Miniblog Next – Tecnologias Utilizadas
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Este projeto é um miniblog desenvolvido com foco em autenticação, CRUD de postagens e integração com Firebase, utilizando o ecossistema moderno do Next.js.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Principais Tecnologias
 
-To learn more about Next.js, take a look at the following resources:
+### **Next.js (App Router)**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Framework React para aplicações web modernas.
+- Utiliza o novo sistema de rotas baseado em pastas (`app/`).
+- Suporte a Server Actions, Server Components e Middleware.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### **React**
 
-## Deploy on Vercel
+- Biblioteca base para construção da interface.
+- Uso de hooks modernos (`useState`, `useEffect`, `useActionState`).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### **TypeScript**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Tipagem estática para maior segurança e produtividade no desenvolvimento.
+
+### **Tailwind CSS**
+
+- Framework utilitário para estilização rápida e responsiva dos componentes.
+
+---
+
+## **Firebase**
+
+### **Firebase Authentication**
+
+- Autenticação de usuários (registro, login, logout).
+- Uso do SDK do client (`firebase/auth`) para autenticação no client-side.
+- Geração e uso de tokens JWT para autenticação server-side.
+
+### **Firebase Firestore**
+
+- Banco de dados NoSQL em tempo real para armazenar posts do blog.
+- Operações CRUD: criação, listagem, atualização e exclusão de posts.
+
+### **Firebase Admin SDK**
+
+- Utilizado no server-side para validação de tokens JWT e obtenção do `uid` do usuário autenticado.
+- Configurado via variáveis de ambiente para segurança das credenciais.
+
+---
+
+## **Next.js Middleware**
+
+- Proteção de rotas sensíveis verificando a existência do cookie de autenticação.
+- Redirecionamento automático para login caso o usuário não esteja autenticado.
+
+---
+
+## **Outras Bibliotecas e Recursos**
+
+- **Jest**: Testes unitários e mocks de dependências.
+- **Testing Library**: Testes de componentes React.
+- **jose**: (Opcional) Para validação de JWT no middleware, se necessário.
+- **next/headers**: Manipulação de cookies em Server Actions e Middleware.
+- **next/image**: Otimização de imagens externas.
+
+---
+
+## **Estrutura de Pastas**
+
+- `/src/app/`: Estrutura principal de rotas e páginas do Next.js.
+- `/src/app/lib/firebase/config.js`: Configuração do Firebase Client SDK.
+- `/src/app/lib/firebase/admin.ts`: Configuração do Firebase Admin SDK (server-side).
+- `/src/app/lib/actions.ts`: Server Actions para autenticação e CRUD de posts.
+- `/src/middleware.ts`: Middleware para proteção de rotas.
+- `/src/__tests__/`: Testes automatizados.
+
+---
+
+## **Variáveis de Ambiente**
+
+- As credenciais do Firebase (client e admin) são fornecidas via `.env` para segurança.
+- O `private_key` do service account deve ser tratado com `.replace(/\\n/g, "\n")` para funcionar corretamente.
+
+---
+
+## **Observações**
+
+- O projeto separa claramente o uso do Firebase Client SDK (client-side) e Admin SDK (server-side).
+- Cookies de autenticação são manipulados apenas em Server Actions ou Middleware, conforme exigido pelo Next.js App Router.
+- O uso de aliases (`@/`) é configurado no Jest para facilitar os imports nos testes.
+
+---
+
+**Desenvolvido com foco em segurança, performance e boas práticas do ecossistema React/Next.js.**
