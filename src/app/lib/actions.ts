@@ -14,6 +14,7 @@ import { verifyIdToken } from "@/app/lib/firebase/admin";
 import { getDocs, doc, setDoc } from "firebase/firestore";
 import { getDoc } from "firebase/firestore";
 import { deleteDoc } from "firebase/firestore";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function createLoginUser(prevState: any, formData: FormData) {
   const email = formData.get("email") as string;
@@ -155,6 +156,7 @@ export async function createPost(
   try {
     await addDoc(postRef, postData);
     console.log("Post created:", postData);
+    revalidatePath("/");
   } catch (error: any) {
     return {
       message: `Erro ao criar post: ${error.message}`,
