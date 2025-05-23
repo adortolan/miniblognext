@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// comment
-
 "use server";
 import {
   createUserWithEmailAndPassword,

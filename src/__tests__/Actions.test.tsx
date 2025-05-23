@@ -52,6 +52,10 @@ jest.mock("firebase/auth", () => {
   };
 });
 
+jest.mock("next/cache", () => ({
+  revalidatePath: jest.fn(),
+}));
+
 describe("Actions", () => {
   //criar um teste para a função createLoginUser
   it("Deve retornar erro de senhas não conferem", async () => {
@@ -161,7 +165,7 @@ describe("Actions", () => {
     const formData = new FormData();
     formData.append("titulo", "Teste");
     formData.append("conteudo", "Teste");
-    formData.append("image", "Teste");
+    formData.append("image", "https://example.com/image.jpg");
     formData.append("tags", "Teste");
 
     const result = await createPost({}, formData);
@@ -186,12 +190,37 @@ describe("Actions", () => {
     const formData = new FormData();
     formData.append("titulo", "Teste");
     formData.append("conteudo", "Teste");
-    formData.append("image", "Teste");
+    formData.append("image", "https://example.com/image.jpg");
     formData.append("tags", "Teste");
 
     const result = await createPost({}, formData);
     expect(result).toEqual({
       message: "Usuário não está logado",
+    });
+    expect(result).toHaveProperty("message");
+  });
+
+  it("Deve retornar mesagem de URL da imagem inválida", async () => {
+    // Mock do retorno do addDoc
+    (addDoc as jest.Mock).mockResolvedValue({ id: "123456" });
+
+    (cookies as jest.Mock).mockReturnValue({
+      get: jest.fn().mockReturnValue({ value: "" }),
+    });
+
+    (verifyIdToken as jest.Mock).mockResolvedValue({
+      uid: "123456",
+    });
+
+    const formData = new FormData();
+    formData.append("titulo", "Teste");
+    formData.append("conteudo", "Teste");
+    formData.append("image", "Teste");
+    formData.append("tags", "Teste");
+
+    const result = await createPost({}, formData);
+    expect(result).toEqual({
+      message: "URL da imagem inválida: Invalid URL: Teste",
     });
     expect(result).toHaveProperty("message");
   });
