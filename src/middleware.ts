@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-const protectedRoutes = ["/logout", "/createpost"];
+const protectedRoutes = ["/logout", "/createpost", "/userposts"];
 
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;

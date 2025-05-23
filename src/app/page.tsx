@@ -10,7 +10,7 @@ export default async function Home() {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-12">
         {posts.map((post) => (
           <div
-            key={post.userId}
+            key={post.id}
             className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm hover:shadow-md transition-shadow duration-300"
           >
             <Image

@@ -1,6 +1,7 @@
 import {
   createLoginUser,
   createPost,
+  deletePost,
   loginUser,
   logoutUser,
 } from "../app/lib/actions";
@@ -10,8 +11,9 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { cookies } from "next/headers";
-import { addDoc } from "firebase/firestore";
+import { addDoc, deleteDoc } from "firebase/firestore";
 import { verifyIdToken } from "../app/lib/firebase/admin";
+import { revalidatePath } from "next/cache";
 
 // Mock do verifyIdToken
 jest.mock("../app/lib/firebase/admin", () => ({
@@ -23,6 +25,11 @@ jest.mock("firebase/firestore", () => ({
   addDoc: jest.fn(),
   collection: jest.fn(),
   Timestamp: { now: jest.fn(() => "mocked-timestamp") },
+  deleteDoc: jest.fn(),
+  doc: jest.fn(),
+  setDoc: jest.fn(),
+  query: jest.fn(),
+  where: jest.fn(),
 }));
 
 jest.mock("next/headers", () => ({
@@ -223,5 +230,29 @@ describe("Actions", () => {
       message: "URL da imagem inválida: Invalid URL: Teste",
     });
     expect(result).toHaveProperty("message");
+  });
+
+  it("deve deletar o post e revalidar os caminhos", async () => {
+    // Arrange
+    (deleteDoc as jest.Mock).mockResolvedValue(undefined);
+
+    // Act
+    const result = await deletePost("postIdTeste");
+
+    // Assert
+    expect(deleteDoc).toHaveBeenCalled();
+    expect(revalidatePath).toHaveBeenCalledWith("userposts");
+    expect(revalidatePath).toHaveBeenCalledWith("/");
+    expect(result).toEqual({ message: "Post deletado com sucesso" });
+  });
+
+  it("deve retornar mensagem de erro ao falhar", async () => {
+    (deleteDoc as jest.Mock).mockRejectedValue(new Error("Falha ao deletar"));
+
+    const result = await deletePost("postIdTeste");
+
+    expect(result).toEqual({
+      message: "Erro ao deletar post: Falha ao deletar",
+    });
   });
 });

@@ -7,12 +7,18 @@ import {
 } from "firebase/auth";
 import { auth, db } from "@/app/lib/firebase/config";
 import { cookies } from "next/headers";
-import { collection, addDoc, Timestamp } from "firebase/firestore";
-import { verifyIdToken } from "@/app/lib/firebase/admin";
+import {
+  collection,
+  addDoc,
+  Timestamp,
+  query,
+  where,
+} from "firebase/firestore";
 import { getDocs, doc, setDoc } from "firebase/firestore";
-import { getDoc } from "firebase/firestore";
 import { deleteDoc } from "firebase/firestore";
 import { revalidatePath } from "next/cache";
+import { getUserId } from "./getUserId";
+import type { Posts } from "@/interfaces/posts";
 
 export async function createLoginUser(prevState: any, formData: FormData) {
   const email = formData.get("email") as string;
@@ -110,29 +116,6 @@ export async function createPost(
     };
   }
 
-  const cookieStore = cookies();
-  const token = (await cookieStore).get("token")?.value;
-
-  if (!token) {
-    return { message: "Usuário não está logado" };
-  }
-
-  let decodedToken: any;
-
-  //criar uma promisse para verificar o token
-  // e retornar o uid do usuário
-  // e verificar se o token é válido
-
-  try {
-    decodedToken = await verifyIdToken(token);
-  } catch (error: any) {
-    const cookieStore = cookies();
-    (await cookieStore).delete("token");
-    return {
-      message: `Erro ao verificar token: ${error.message}`,
-    };
-  }
-
   const tagsArray = tags.split(",").map((tag) => tag.trim().toLowerCase());
   if (tagsArray.length > 5) {
     return {
@@ -140,10 +123,16 @@ export async function createPost(
     };
   }
 
+  const userId = await getUserId();
+  if (!userId) {
+    console.error("Usuário não está logado");
+    return { message: "Usuário não está logado" };
+  }
+
   // criar um insert de post no banco de dados firebase
   const postRef = collection(db, "posts");
   const postData = {
-    userId: decodedToken.uid,
+    userId: userId,
     titulo,
     conteudo,
     image,
@@ -166,13 +155,20 @@ export async function createPost(
 export async function listPosts() {
   const postsRef = collection(db, "posts");
   const postsSnapshot = await getDocs(postsRef);
-  const postsList = postsSnapshot.docs.map((doc) => doc.data());
-  return postsList;
+  const postsList = postsSnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+  return postsList as Posts[];
 }
+
 export async function deletePost(postId: string) {
   const postRef = doc(db, "posts", postId);
   try {
     await deleteDoc(postRef);
+    revalidatePath("userposts");
+    revalidatePath("/");
+
     console.log("Post deleted:", postId);
   } catch (error: any) {
     return {
@@ -181,6 +177,7 @@ export async function deletePost(postId: string) {
   }
   return { message: "Post deletado com sucesso" };
 }
+
 export async function updatePost(
   postId: string,
   formData: FormData
@@ -198,25 +195,6 @@ export async function updatePost(
     };
   }
 
-  const cookieStore = cookies();
-  const token = (await cookieStore).get("token")?.value;
-
-  if (!token) {
-    return { message: "Usuário não está logado" };
-  }
-
-  let decodedToken: any;
-
-  try {
-    decodedToken = await verifyIdToken(token);
-  } catch (error: any) {
-    const cookieStore = cookies();
-    (await cookieStore).delete("token");
-    return {
-      message: `Erro ao verificar token: ${error.message}`,
-    };
-  }
-
   const tagsArray = tags.split(",").map((tag) => tag.trim().toLowerCase());
   if (tagsArray.length > 5) {
     return {
@@ -224,10 +202,16 @@ export async function updatePost(
     };
   }
 
+  const userId = await getUserId();
+  if (!userId) {
+    console.error("Usuário não está logado");
+    return { message: "Usuário não está logado" };
+  }
+
   // criar um insert de post no banco de dados firebase
   const postRef = doc(db, "posts", postId);
   const postData = {
-    userId: decodedToken.uid,
+    userId: userId,
     titulo,
     conteudo,
     image,
@@ -246,12 +230,19 @@ export async function updatePost(
   return { message: "Post atualizado com sucesso" };
 }
 
-export async function getPost(postId: string) {
-  const postRef = doc(db, "posts", postId);
-  const postSnapshot = await getDoc(postRef);
-  if (postSnapshot.exists()) {
-    return postSnapshot.data();
-  } else {
+export async function getPostsByUserId() {
+  const userId = await getUserId();
+  if (!userId) {
+    console.error("Usuário não está logado");
     return null;
   }
+
+  const postsRef = collection(db, "posts");
+  const userPostsRef = query(postsRef, where("userId", "==", userId));
+  const postsSnapshot = await getDocs(userPostsRef);
+  const postsList = postsSnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+  return postsList as Posts[];
 }
