@@ -1,12 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getPostById, updatePost } from "@/app/lib/actions";
 import { notFound, redirect } from "next/navigation";
 
-export default async function EditPostPage({
-  params,
-}: {
-  params: { postid: string };
-}) {
-  const post = await getPostById(params.postid);
+interface PageProps {
+  params: Promise<{ postid: string }>;
+}
+
+export default async function EditPostPage({ params }: PageProps) {
+  const { postid } = await params;
+
+  const post = await getPostById(postid);
   if (!post) return notFound();
 
   return (
@@ -14,7 +17,7 @@ export default async function EditPostPage({
       <h1 className="text-2xl font-bold mb-6">Editar Post</h1>
       <form
         className="space-y-4"
-        action={async (formData) => {
+        action={async (formData: any) => {
           "use server";
           await updatePost(post.id, formData);
           redirect("/userposts");
