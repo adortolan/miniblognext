@@ -40,8 +40,8 @@ export default async function UserPostsPage() {
                 ))}
               </div>
 
-              <div className="mt-2 flex flex-wrap">
-                <Link href={`/posts/${post.id}`}>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <Link href={`/userposts/${post.id}`}>
                   <PencilSquareIcon className="h-5 w-5 inline-block mr-1 text-blue-500 hover:opacity-40" />
                 </Link>
                 <form
@@ -52,7 +52,7 @@ export default async function UserPostsPage() {
                   }}
                 >
                   <button type="submit">
-                    <TrashIcon className="h-5 w-5 inline-block mr-1 text-blue-500 hover:opacity-40" />
+                    <TrashIcon className="h-5 w-5 inline-block mr-1 text-red-500 hover:opacity-40" />
                   </button>
                 </form>
               </div>

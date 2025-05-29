@@ -13,6 +13,7 @@ import {
   Timestamp,
   query,
   where,
+  getDoc,
 } from "firebase/firestore";
 import { getDocs, doc, setDoc } from "firebase/firestore";
 import { deleteDoc } from "firebase/firestore";
@@ -222,6 +223,8 @@ export async function updatePost(
   try {
     await setDoc(postRef, postData);
     console.log("Post updated:", postData);
+    revalidatePath("userposts");
+    revalidatePath("/");
   } catch (error: any) {
     return {
       message: `Erro ao atualizar post: ${error.message}`,
@@ -245,4 +248,13 @@ export async function getPostsByUserId() {
     ...doc.data(),
   }));
   return postsList as Posts[];
+}
+
+export async function getPostById(postId: string): Promise<Posts | null> {
+  const postRef = doc(db, "posts", postId);
+  const postSnapshot = await getDoc(postRef);
+  if (!postSnapshot.exists()) {
+    return null;
+  }
+  return { id: postSnapshot.id, ...postSnapshot.data() } as Posts;
 }
