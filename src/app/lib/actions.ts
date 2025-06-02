@@ -14,6 +14,7 @@ import {
   query,
   where,
   getDoc,
+  orderBy,
 } from "firebase/firestore";
 import { getDocs, doc, setDoc } from "firebase/firestore";
 import { deleteDoc } from "firebase/firestore";
@@ -155,7 +156,9 @@ export async function createPost(
 
 export async function listPosts() {
   const postsRef = collection(db, "posts");
-  const postsSnapshot = await getDocs(postsRef);
+  const postsQuery = query(postsRef, orderBy("createdAt", "desc"));
+
+  const postsSnapshot = await getDocs(postsQuery);
   const postsList = postsSnapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
@@ -241,7 +244,11 @@ export async function getPostsByUserId() {
   }
 
   const postsRef = collection(db, "posts");
-  const userPostsRef = query(postsRef, where("userId", "==", userId));
+  const userPostsRef = query(
+    postsRef,
+    where("userId", "==", userId),
+    orderBy("createdAt", "desc")
+  );
   const postsSnapshot = await getDocs(userPostsRef);
   const postsList = postsSnapshot.docs.map((doc) => ({
     id: doc.id,

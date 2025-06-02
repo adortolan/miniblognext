@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { deletePost, getPostsByUserId } from "../lib/actions";
 import Link from "next/link";
-import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/solid";
+import { ConfirmButton } from "@/components/confirmButton";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
 
 export default async function UserPostsPage() {
   const userPosts = await getPostsByUserId();
@@ -51,9 +52,7 @@ export default async function UserPostsPage() {
                     await deletePost(id);
                   }}
                 >
-                  <button type="submit">
-                    <TrashIcon className="h-5 w-5 inline-block mr-1 text-red-500 hover:opacity-40" />
-                  </button>
+                  <ConfirmButton />
                 </form>
               </div>
             </div>
