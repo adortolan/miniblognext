@@ -146,6 +146,7 @@ export async function createPost(
     await addDoc(postRef, postData);
     console.log("Post created:", postData);
     revalidatePath("/");
+    revalidatePath("userposts");
   } catch (error: any) {
     return {
       message: `Erro ao criar post: ${error.message}`,
